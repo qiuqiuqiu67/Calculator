@@ -16,7 +16,9 @@ public class Calculator {
     private double currentVal;
     private Stack<Double> undoStack;
     private Stack<Double> redoStack;
-
+    
+    private double MAXNUMBER = 1000000000000.0;
+    private double MINNUMBER = -1000000000000.0;
 
     public Calculator() {
         this.currentVal = 0;
@@ -25,15 +27,22 @@ public class Calculator {
     }
 
     public Calculator(double original) {
+        checkOperand(original);
         this.currentVal = original;
         this.undoStack = new Stack<>();
         this.redoStack = new Stack<>();
     }
 
+    private void checkOperand(double original) {
+        if(original>MAXNUMBER && original<MINNUMBER){
+            throw new RuntimeException("The operand is overLimted");
+        }
+    }
+
     /**
      * 简易计算
-     * @param 操作符
-     * @param 操作数
+     * @param operator//运算符
+     * @param operand//运算数
      * @return 计算后的结果
      */
     public double compute(String operator,double operand){
@@ -69,6 +78,7 @@ public class Calculator {
         if(calculatorOperator==null){
             throw new IllegalArgumentException("The operator is not defined");
         }
+        checkOperand(operand);
         switch (calculatorOperator){
             case ADD:
                 checkAdd(operand);
@@ -89,12 +99,12 @@ public class Calculator {
 
     private void checkAdd(double operand) {
         if(operand>0&&currentVal>0){
-            if(currentVal > Double.MAX_VALUE-operand){
+            if(currentVal > MAXNUMBER-operand){
                 throw new RuntimeException("The AddSum is overlimited");
             }
         }
         if(operand<0&&currentVal<0){
-            if(currentVal < Double.MIN_VALUE-operand){
+            if(currentVal < MINNUMBER-operand){
                 throw new RuntimeException("The AddSum is overlimited");
             }
         }
@@ -102,12 +112,12 @@ public class Calculator {
 
     private void checkSub(double operand) {
         if(operand<0&&currentVal>0){
-            if(currentVal > Double.MAX_VALUE + operand){
+            if(currentVal > MAXNUMBER + operand){
                 throw new RuntimeException("The SubSum is overlimited");
             }
         }
         if(operand>0&&currentVal<0){
-            if(currentVal < Double.MIN_VALUE +operand){
+            if(currentVal < MINNUMBER +operand){
                 throw new RuntimeException("The SubSum is overlimited");
             }
         }
@@ -115,13 +125,13 @@ public class Calculator {
 
     private void checkMult(double operand) {
         if(operand>1 && currentVal>1 || operand<-1 && currentVal<-1){
-            if(currentVal > Double.MAX_VALUE / operand){
+            if(currentVal > MAXNUMBER / operand){
                 throw new RuntimeException("The MultSum is overlimited");
             }
         }
 
         if(operand> 1 && currentVal< -1 || operand< -1 && currentVal> 1){
-            if(currentVal < Double.MIN_VALUE / operand){
+            if(currentVal < MINNUMBER / operand){
                 throw new RuntimeException("The MultSum is overlimited");
             }
         }
@@ -133,13 +143,13 @@ public class Calculator {
         }
 
         if(operand > 0 && operand<1 && currentVal>1 || operand>-1 && operand<0  && currentVal<-1){
-            if(currentVal > Double.MAX_VALUE * operand){
+            if(currentVal > MAXNUMBER * operand){
                 throw new RuntimeException("The DivSum is overlimited");
             }
         }
 
         if(operand > 0 && operand<1 && currentVal< -1 || operand>-1 && operand<0 && currentVal>1){
-            if(currentVal < Double.MIN_VALUE * operand){
+            if(currentVal < MINNUMBER * operand){
                 throw new RuntimeException("The DivSum is overlimited");
             }
         }
@@ -158,6 +168,7 @@ public class Calculator {
     private double add(double num) {
         this.undoStack.push(this.currentVal);
         this.currentVal += num;
+        this.redoStack.clear();
         return  currentVal;
 
     }
@@ -166,6 +177,7 @@ public class Calculator {
     private double sub(double num) {
         this.undoStack.push(this.currentVal);
         this.currentVal -= num;
+        this.redoStack.clear();
         return  currentVal;
 
     }
@@ -174,6 +186,7 @@ public class Calculator {
     private double mult(double num) {
         this.undoStack.push(this.currentVal);
         this.currentVal *= num;
+        this.redoStack.clear();
         return  currentVal;
     }
 
@@ -181,6 +194,7 @@ public class Calculator {
     private double div(double num) {
         this.undoStack.push(this.currentVal);
         this.currentVal /= num;
+        this.redoStack.clear();
         return  currentVal;
     }
 
@@ -270,15 +284,32 @@ public class Calculator {
         try {
             calc.clear();
             calc.compute(CalculatorOperatorEnum.ADD.getOperator(), 1.0);
-            calc.compute(CalculatorOperatorEnum.ADD.getOperator(), Double.MAX_VALUE);
+            calc.compute(CalculatorOperatorEnum.ADD.getOperator(), 1000000000000.0);
         } catch (Exception e) {
             System.out.println(e.getMessage()); // 输出 "The AddSum is overlimited."
         }
+
+        try {
+            calc.clear();
+            calc.compute(CalculatorOperatorEnum.ADD.getOperator(), -1.0);
+            calc.compute(CalculatorOperatorEnum.ADD.getOperator(), -1000000000000.0);
+        } catch (Exception e) {
+            System.out.println(e.getMessage()); // 输出 "The AddSum is overlimited."
+        }
+
         //减法溢出
         try {
             calc.clear();
-            calc.compute(CalculatorOperatorEnum.SUB.getOperator(), Double.MIN_VALUE);
+            calc.compute(CalculatorOperatorEnum.ADD.getOperator(), -1000000000000.0);
             calc.compute(CalculatorOperatorEnum.SUB.getOperator(), 1.0);
+        } catch (Exception e) {
+            System.out.println(e.getMessage()); // 输出 "The SubSum is overlimited"
+        }
+
+        try {
+            calc.clear();
+            calc.compute(CalculatorOperatorEnum.ADD.getOperator(), 1000000000000.0);
+            calc.compute(CalculatorOperatorEnum.SUB.getOperator(), -1.0);
         } catch (Exception e) {
             System.out.println(e.getMessage()); // 输出 "The SubSum is overlimited"
         }
@@ -287,7 +318,7 @@ public class Calculator {
         try {
             calc.clear();
             calc.compute(CalculatorOperatorEnum.ADD.getOperator(), 100);
-            calc.compute(CalculatorOperatorEnum.MULT.getOperator(), Double.MAX_VALUE);
+            calc.compute(CalculatorOperatorEnum.MULT.getOperator(), 1000000000000.0);
         } catch (Exception e) {
             System.out.println(e.getMessage()); // 输出 "The MultSum is overlimited."
         }
@@ -295,7 +326,7 @@ public class Calculator {
         //除法溢出
         try {
             calc.clear();
-            calc.compute(CalculatorOperatorEnum.ADD.getOperator(), Double.MAX_VALUE);
+            calc.compute(CalculatorOperatorEnum.ADD.getOperator(), 1000000000000.0);
             calc.compute(CalculatorOperatorEnum.DIV.getOperator(), 0.1);
         } catch (Exception e) {
             System.out.println(e.getMessage()); // 输出 "The DivSum is overlimited"
