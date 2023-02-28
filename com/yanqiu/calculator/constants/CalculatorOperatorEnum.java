@@ -1,15 +1,11 @@
 package com.yanqiu.calculator.constants;
 
 /**
-* @program: com.yanqiu.Calculator
-*
-* @description: 操作符枚举值
-*
-* @author: huyq
-*
-* @create: 2023-02-27 21:55
-**/
-
+ * @program: com.yanqiu.Calculator
+ * @description: 操作符枚举值
+ * @author: huyq
+ * @create: 2023-02-27 21:55
+ **/
 
 
 public enum CalculatorOperatorEnum {
@@ -23,7 +19,7 @@ public enum CalculatorOperatorEnum {
         this.operator = operator;
     }
 
-    public String getOperator(){
+    public String getOperator() {
         return this.operator;
     }
 

@@ -1,12 +1,10 @@
 package com.yanqiu; /**
-* @program: com.yanqiu.Calculator
-*
-* @description: 简易计算器
-*
-* @author: huyq
-*
-* @create: 2023-02-27 21:55
-**/
+ * @program: com.yanqiu.Calculator
+ * @description: 简易计算器
+ * @author: huyq
+ * @create: 2023-02-27 21:55
+ **/
+
 import com.yanqiu.calculator.constants.CalculatorOperatorEnum;
 
 import java.util.Stack;
@@ -16,7 +14,7 @@ public class Calculator {
     private double currentVal;
     private Stack<Double> undoStack;
     private Stack<Double> redoStack;
-    
+
     private double MAXNUMBER = 1000000000000.0;
     private double MINNUMBER = -1000000000000.0;
 
@@ -34,7 +32,7 @@ public class Calculator {
     }
 
     private void checkOperand(double original) {
-        if(original>MAXNUMBER && original<MINNUMBER){
+        if (original > MAXNUMBER && original < MINNUMBER) {
             throw new RuntimeException("The operand is overLimted");
         }
     }
@@ -45,15 +43,15 @@ public class Calculator {
      * @param operand//运算数
      * @return 计算后的结果
      */
-    public double compute(String operator,double operand){
-        checkCompute(operator,operand);
-        return doCompute(operator,operand);
+    public double compute(String operator, double operand) {
+        checkCompute(operator, operand);
+        return doCompute(operator, operand);
     }
 
     private double doCompute(String operator, Double operand) {
         CalculatorOperatorEnum calculatorOperator = CalculatorOperatorEnum.find(operator);
         double result = 0;
-        switch (calculatorOperator){
+        switch (calculatorOperator) {
             case ADD:
                 result = add(operand);
                 break;
@@ -75,11 +73,11 @@ public class Calculator {
 
     private void checkCompute(String operator, Double operand) {
         CalculatorOperatorEnum calculatorOperator = CalculatorOperatorEnum.find(operator);
-        if(calculatorOperator==null){
+        if (calculatorOperator == null) {
             throw new IllegalArgumentException("The operator is not defined");
         }
         checkOperand(operand);
-        switch (calculatorOperator){
+        switch (calculatorOperator) {
             case ADD:
                 checkAdd(operand);
                 break;
@@ -98,58 +96,58 @@ public class Calculator {
     }
 
     private void checkAdd(double operand) {
-        if(operand>0&&currentVal>0){
-            if(currentVal > MAXNUMBER-operand){
+        if (operand > 0 && currentVal > 0) {
+            if (currentVal > MAXNUMBER - operand) {
                 throw new RuntimeException("The AddSum is overlimited");
             }
         }
-        if(operand<0&&currentVal<0){
-            if(currentVal < MINNUMBER-operand){
+        if (operand < 0 && currentVal < 0) {
+            if (currentVal < MINNUMBER - operand) {
                 throw new RuntimeException("The AddSum is overlimited");
             }
         }
     }
 
     private void checkSub(double operand) {
-        if(operand<0&&currentVal>0){
-            if(currentVal > MAXNUMBER + operand){
+        if (operand < 0 && currentVal > 0) {
+            if (currentVal > MAXNUMBER + operand) {
                 throw new RuntimeException("The SubSum is overlimited");
             }
         }
-        if(operand>0&&currentVal<0){
-            if(currentVal < MINNUMBER +operand){
+        if (operand > 0 && currentVal < 0) {
+            if (currentVal < MINNUMBER + operand) {
                 throw new RuntimeException("The SubSum is overlimited");
             }
         }
     }
 
     private void checkMult(double operand) {
-        if(operand>1 && currentVal>1 || operand<-1 && currentVal<-1){
-            if(currentVal > MAXNUMBER / operand){
+        if (operand > 1 && currentVal > 1 || operand < -1 && currentVal < -1) {
+            if (currentVal > MAXNUMBER / operand) {
                 throw new RuntimeException("The MultSum is overlimited");
             }
         }
 
-        if(operand> 1 && currentVal< -1 || operand< -1 && currentVal> 1){
-            if(currentVal < MINNUMBER / operand){
+        if (operand > 1 && currentVal < -1 || operand < -1 && currentVal > 1) {
+            if (currentVal < MINNUMBER / operand) {
                 throw new RuntimeException("The MultSum is overlimited");
             }
         }
     }
 
     private void checkDiv(double operand) {
-        if(operand==0){
+        if (operand == 0) {
             throw new RuntimeException("Cannot divide by zero.");
         }
 
-        if(operand > 0 && operand<1 && currentVal>1 || operand>-1 && operand<0  && currentVal<-1){
-            if(currentVal > MAXNUMBER * operand){
+        if (operand > 0 && operand < 1 && currentVal > 1 || operand > -1 && operand < 0 && currentVal < -1) {
+            if (currentVal > MAXNUMBER * operand) {
                 throw new RuntimeException("The DivSum is overlimited");
             }
         }
 
-        if(operand > 0 && operand<1 && currentVal< -1 || operand>-1 && operand<0 && currentVal>1){
-            if(currentVal < MINNUMBER * operand){
+        if (operand > 0 && operand < 1 && currentVal < -1 || operand > -1 && operand < 0 && currentVal > 1) {
+            if (currentVal < MINNUMBER * operand) {
                 throw new RuntimeException("The DivSum is overlimited");
             }
         }
@@ -169,7 +167,7 @@ public class Calculator {
         this.undoStack.push(this.currentVal);
         this.currentVal += num;
         this.redoStack.clear();
-        return  currentVal;
+        return currentVal;
 
     }
 
@@ -178,7 +176,7 @@ public class Calculator {
         this.undoStack.push(this.currentVal);
         this.currentVal -= num;
         this.redoStack.clear();
-        return  currentVal;
+        return currentVal;
 
     }
 
@@ -187,7 +185,7 @@ public class Calculator {
         this.undoStack.push(this.currentVal);
         this.currentVal *= num;
         this.redoStack.clear();
-        return  currentVal;
+        return currentVal;
     }
 
     //除法
@@ -195,7 +193,7 @@ public class Calculator {
         this.undoStack.push(this.currentVal);
         this.currentVal /= num;
         this.redoStack.clear();
-        return  currentVal;
+        return currentVal;
     }
 
 
@@ -225,7 +223,7 @@ public class Calculator {
 
     //清理并初始化
     public void clear() {
-        currentVal=0.0;
+        currentVal = 0.0;
         this.undoStack.clear();
         this.redoStack.clear();
     }
