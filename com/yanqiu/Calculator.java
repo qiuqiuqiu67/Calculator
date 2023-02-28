@@ -77,13 +77,6 @@ public class Calculator {
         return this.currentVal;
     }
 
-    //除法
-    private double div(double num) {
-        this.undoStack.push(this.currentVal);
-        this.currentVal /= num;
-        this.redoStack.clear();
-        return currentVal;
-    }
 
     /**
      * 撤销上一次的计算
