@@ -25,18 +25,9 @@ public class Calculator {
         this.redoStack = new Stack<>();
     }
 
-    public Calculator(double original) {
-        checkOperand(original);
-        this.currentVal = original;
-        this.undoStack = new Stack<>();
-        this.redoStack = new Stack<>();
-    }
 
-    private void checkOperand(double original) {
-        if (original > MAXNUMBER && original < MINNUMBER) {
-            throw new RuntimeException("The operand is overLimted");
-        }
-    }
+
+
 
     /**
      * 简易计算
@@ -111,11 +102,11 @@ public class Calculator {
 
 
     public static void main(String[] args) {
-        Calculator calc = new Calculator(5);
+        Calculator calc = new Calculator();
         try {
-
+            calc.compute(CalculatorOperatorEnum.ADD.getOperator(), 5);
             //测试正常用例
-            System.out.println(calc.getCurrentVal());// 输出7.0
+            System.out.println(calc.getCurrentVal());// 输出5.0
 
             // 测试基本操作和undo/redo
 
